@@ -1,6 +1,7 @@
 package com.example.a2good2gooapp;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.Layout;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private List<MenuModel> listDataHeader;
     private HashMap<MenuModel, List<MenuModel>> listDataChild;
 
+
     public ExpandableListAdapter(Context context, List<MenuModel> listDataHeader, HashMap<MenuModel, List<MenuModel>> listChildData) {
         this.context = context;
         this.listDataHeader = listDataHeader;
@@ -34,14 +36,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     public int getChildrenCount(int groupPos) {
         if (this.listDataChild.get(this.listDataHeader.get(groupPos)) == null) {
             return 0;
-        }else{
+        } else {
             return this.listDataChild.get(this.listDataHeader.get(groupPos)).size();
         }
     }
 
     @Override
     public MenuModel getGroup(int groupPos) {
-return this.listDataHeader.get(groupPos);
+        return this.listDataHeader.get(groupPos);
 
     }
 
@@ -68,14 +70,33 @@ return this.listDataHeader.get(groupPos);
     @Override
     public View getGroupView(int groupPos, boolean isExpanded, View convertView, ViewGroup viewGroup) {
         String headerTitle = getGroup(groupPos).menuName;
-        if(convertView == null){
+        if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.list_header,null);
+            convertView = inflater.inflate(R.layout.list_header, null);
         }
         TextView labelListHeader = convertView.findViewById(R.id.labelListHead);
         labelListHeader.setTypeface(null, Typeface.BOLD);
         labelListHeader.setText(headerTitle);
 
+
+        switch (getGroup(groupPos).headerColor) {
+            case 1:
+                labelListHeader.setTextColor(labelListHeader.getResources().getColor(R.color.teal_700));
+                break;
+            case 2:
+                labelListHeader.setTextColor(labelListHeader.getResources().getColor(R.color.mainOrange));
+                break;
+            case 3:
+                labelListHeader.setTextColor(labelListHeader.getResources().getColor(R.color.black));
+                break;
+            case 4:
+                labelListHeader.setTextColor(labelListHeader.getResources().getColor(R.color.white));
+                break;
+            default:
+                break;
+
+
+        }
         return convertView;
     }
 
@@ -90,6 +111,8 @@ return this.listDataHeader.get(groupPos);
         }
         TextView txtListChild = convertView.findViewById(R.id.labelListItem);
         txtListChild.setText(childText);
+
+
         return convertView;
 
     }

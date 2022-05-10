@@ -3,6 +3,7 @@ package com.example.a2good2gooapp;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -71,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Toolbar toolbar = findViewById(R.id.profilebar);
         setSupportActionBar(toolbar);
-
         drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -116,13 +117,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.nav_Favorit_Ret) {
+        if (id == R.id.grp_Favorit_Ret) {
 
-        } else if (id == R.id.nav_fravalgte_ingredienser) {
+        } else if (id == R.id.grp_fravalgte_ingredienser) {
 
-        } else if (id == R.id.nav_diæt) {
+        } else if (id == R.id.grp_diæt) {
+
+        } else if (id == R.id.grp_allergener) {
 
         }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -130,19 +134,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void prepareMenuData() {
-        MenuModel menuModel = new MenuModel("Favorit Retter", true, true, false);
+        MenuModel menuModel = new MenuModel("Favorit Retter", true, true, false, 1);
         headerList.add(menuModel);
 
         List<MenuModel> childModelList = new ArrayList<>();
-        MenuModel childModel = new MenuModel("Ting 1", false, false, true);
+        MenuModel childModel = new MenuModel("Lasagne", false, false, true, 0);
         childModelList.add(childModel);
-        childModel = new MenuModel("Ting 2", false, false, true);
+        childModel = new MenuModel("Pasta kødsvos", false, false, true, 0);
         childModelList.add(childModel);
-        childModel = new MenuModel("Ting 3", false, false, true);
-        childModelList.add(childModel);
-        childModel = new MenuModel("Ting 4", false, false, true);
-        childModelList.add(childModel);
-
 
 
         if (menuModel.hasChildren) {
@@ -150,16 +149,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }
         childModelList = new ArrayList<>();
-        menuModel = new MenuModel("Fravalgte Ingredienser", true, true, false);
+        menuModel = new MenuModel("Fravalgte Ingredienser", true, true, false, 2);
         headerList.add(menuModel);
 
-        childModel = new MenuModel("Ting 1", false, false, true);
+        childModel = new MenuModel("Tomat", false, false, true, 0);
         childModelList.add(childModel);
-        childModel = new MenuModel("Ting 2", false, false, true);
+        childModel = new MenuModel("Squash", false, false, true, 0);
         childModelList.add(childModel);
-        childModel = new MenuModel("Ting 3", false, false, true);
+        childModel = new MenuModel("Bladcelleri", false, false, true, 0);
         childModelList.add(childModel);
-        childModel = new MenuModel("Ting 4", false, false, true);
+        childModel = new MenuModel("Cheddar", false, false, true, 0);
         childModelList.add(childModel);
 
         if (menuModel.hasChildren) {
@@ -168,23 +167,48 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         childModelList = new ArrayList<>();
-        menuModel = new MenuModel("Diæt", true, true, false);
+        menuModel = new MenuModel("Diæt", true, true, false, 3);
         headerList.add(menuModel);
 
-        childModel = new MenuModel("Vegetar", false, false, true);
+        childModel = new MenuModel("Vegetar", false, false, true, 0);
         childModelList.add(childModel);
-        childModel = new MenuModel("Veganer", false, false, true);
+        childModel = new MenuModel("Veganer", false, false, true, 0);
         childModelList.add(childModel);
-        childModel = new MenuModel("Spiser Kød", false, false, true);
+        childModel = new MenuModel("Spiser Kød", false, false, true, 0);
         childModelList.add(childModel);
 
         if (menuModel.hasChildren) {
             childList.put(menuModel, childModelList);
+        }
+
+        childModelList = new ArrayList<>();
+        menuModel = new MenuModel("Allergener", true, true, false, 4);
+        headerList.add(menuModel);
+
+        childModel = new MenuModel("Skaldyr", false, false, true, 0);
+        childModelList.add(childModel);
+        childModel = new MenuModel("Mælk", false, false, true, 0);
+        childModelList.add(childModel);
+        childModel = new MenuModel("Fisk", false, false, true, 0);
+        childModelList.add(childModel);
+        childModel = new MenuModel("Jordnødder", false, false, true, 0);
+        childModelList.add(childModel);
+        childModel = new MenuModel("Hvede", false, false, true, 0);
+        childModelList.add(childModel);
+        childModel = new MenuModel("Æg", false, false, true, 0);
+        childModelList.add(childModel);
+        childModel = new MenuModel("Nødder", false, false, true, 0);
+        childModelList.add(childModel);
+
+        if (menuModel.hasChildren) {
+            childList.put(menuModel, childModelList);
+
         }
 
     }
 
     private void populateExpandableList() {
+
         expandableListAdapter = new com.example.a2good2gooapp.ExpandableListAdapter(this, headerList, childList);
         expandableListView.setAdapter(expandableListAdapter);
 
@@ -197,15 +221,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView expandableListView, View view, int groupPos, int childPos, long id) {
+
                 if (childList.get(headerList.get(groupPos)) != null) {
                     MenuModel model = childList.get(headerList.get(groupPos)).get(childPos);
-                    if (model.isSelectable) {
-                        model.isSelectable = false;
-                        Toast.makeText(getApplicationContext(),"Button is now"+model.isSelectable,Toast.LENGTH_SHORT).show();
-                    } else {
+                    if (!model.isSelectable) {
                         model.isSelectable = true;
-                        Toast.makeText(getApplicationContext(),"Button is now"+model.isSelectable,Toast.LENGTH_SHORT).show();
-
+                        Toast.makeText(getApplicationContext(), "Button is now " + model.isSelectable, Toast.LENGTH_SHORT).show();
+                        model.menuName = "You do want " + model.menuName;
+                    } else {
+                        model.isSelectable = false;
+                        Toast.makeText(getApplicationContext(), "Button is now " + model.isSelectable, Toast.LENGTH_SHORT).show();
+                        model.menuName = "You don't want " + model.menuName;
                     }
                 }
                 return false;
